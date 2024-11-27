@@ -20,17 +20,22 @@ public class Main implements RequestHandler<Map<String, Object>, Map<String, Str
     @Override
     public Map<String, String> handleRequest(Map<String, Object> input, Context context) {
 
-        String body = input.get("body").toString();
-        UrlData urlData;
+        UrlData urlData = getUrlData(input);
+        String shortUrlCode = UUID.randomUUID().toString().substring(0, 8);
 
+        return saveUrlDataToS3(urlData, shortUrlCode);
+    }
+
+    private UrlData getUrlData(Map<String, Object> input) {
+        String body = input.get("body").toString();
         try {
-            urlData = mapper.readValue(body, UrlData.class);
+            return mapper.readValue(body, UrlData.class);
         } catch (Exception e) {
             throw new RuntimeException("Error parsing request body: " + e.getMessage(), e);
         }
+    }
 
-        String shortUrlCode = UUID.randomUUID().toString().substring(0, 8);
-
+    private Map<String, String> saveUrlDataToS3(UrlData urlData, String shortUrlCode) {
         try {
             String urlDataJson = mapper.writeValueAsString(urlData);
 
