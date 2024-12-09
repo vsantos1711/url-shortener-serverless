@@ -3,3 +3,11 @@
 !**/src/main/**/target/
 !**/src/test/**/target/
 .vscode
+
+
+terraform.tfplan
+terraform.tfstate
+terraform.tfstate.backup
+./*.tfstate
+**/.terraform/
+tf/.terraform.lock.hcl
